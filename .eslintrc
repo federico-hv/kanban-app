@@ -1,0 +1,46 @@
+{
+    "parser": "babel-eslint", //Activates ES6 linting
+    "ecmaFeatures": {
+        "blockBindings": true,
+        "forOf": true,
+        "arrowFunctions": true,
+        "jsx": true,
+        "modules": true,
+        "classes": true
+    },
+    "rules": {
+        "semi": 2,
+        "indent": [2, 2],
+        "no-underscore-dangle" : 0,
+        "no-use-before-define" : [2, "nofunc"],
+        "no-multi-spaces" : 0,
+        "key-spacing": [2, { "align": "colon" }],
+        "quotes": [2, "single", "avoid-escape"],
+        "strict": 0,
+        "new-cap": 1,
+        "react/display-name": 0,
+        "jsx-quotes": 1,
+        "react/jsx-no-undef": 1,
+        "react/jsx-sort-props": 0,
+        "react/jsx-uses-react": 1,
+        "react/jsx-uses-vars": 1,
+        "react/no-did-mount-set-state": 1,
+        "react/no-did-update-set-state": 1,
+        "react/no-multi-comp": 1,
+        "react/no-unknown-property": 1,
+        "react/prop-types": 1,
+        "react/react-in-jsx-scope": 1,
+        "react/self-closing-comp": 1,
+        "react/wrap-multilines": 1
+    },
+    "env": {
+        "browser": true,
+        "node": true,
+        "es6": true,
+        "amd": true,
+        "mocha": true
+    },
+    "plugins": [
+      "react"
+    ]
+}
