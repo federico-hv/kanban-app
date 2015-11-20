@@ -11,6 +11,7 @@ export default class App extends React.Component {
     return (
       <div>
         <button className="add-lane" onClick={this.addItem}>+</button>
+        {/* This removes the need of pubsub to store */}
         <AltContainer
           stores={[LaneStore]}
           inject={{

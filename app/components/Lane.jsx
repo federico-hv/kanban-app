@@ -3,11 +3,22 @@ import React from 'react';
 import Notes from './Notes.jsx';
 import NoteActions from '../actions/NoteActions';
 import NoteStore from '../stores/NoteStore';
+import LaneActions from '../actions/LaneActions';
+
 
 export default class Lane extends React.Component {
   static propTypes = {
-     //???
+    lane: React.PropTypes.object
   };
+
+  constructor(props) {
+    super(props);
+
+    const id = props.lane.id;
+
+    this.addNote = this.addNote.bind(this, id);
+    this.deleteNote = this.deleteNote.bind(this, id);
+  }
 
   render() {
     const {lane, ...props} = this.props;
@@ -23,7 +34,7 @@ export default class Lane extends React.Component {
         <AltContainer
           stores={[NoteStore]}
           inject={{
-            items: () => NoteStore.getState().notes || []
+            items: () => NoteStore.get(lane.notes)
           }}
         >
           <Notes onEdit={this.editNote} onDelete={this.deleteNote} />
@@ -32,8 +43,9 @@ export default class Lane extends React.Component {
     );
   }
 
-  addNote() {
+  addNote(laneId) {
     NoteActions.create({task: 'New task'});
+    LaneActions.attachToLane({laneId});
   }
 
   editNote(id, task) {
@@ -41,6 +53,7 @@ export default class Lane extends React.Component {
   }
 
   deleteNote(id) {
+    LaneActions.detachFromLane({laneId, noteId});
     NoteActions.delete(id);
   }
 }
