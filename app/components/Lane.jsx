@@ -1,9 +1,16 @@
+/*
+   - Subs and Unsubs the component from NoteStore
+   - Imports NoteActions to trigger events
+   - Imports lane style
+ */
 import AltContainer from 'alt-container';
 import React from 'react';
 import Notes from './Notes.jsx';
 import NoteActions from '../actions/NoteActions';
 import NoteStore from '../stores/NoteStore';
 import LaneActions from '../actions/LaneActions';
+import Editable from './Editable.jsx';
+import '../lane.css';
 
 
 export default class Lane extends React.Component {
@@ -16,17 +23,19 @@ export default class Lane extends React.Component {
 
     const id = props.lane.id;
 
-    this.addNote = this.addNote.bind(this, id);
+    this.addNote    = this.addNote.bind(this, id);
     this.deleteNote = this.deleteNote.bind(this, id);
+    this.editName   = this.editName.bind(this, id);
   }
 
   render() {
     const {lane, ...props} = this.props;
 
     return (
-      <div {...props}>
+      <div {...props}> {/* Spread operator */}
         <div className="lane-header">
-          <div className="lane-name">{lane.name}</div>
+          <Editable className="lane-name" value={lane.name}
+            onEdit={this.editName} />
           <div className="lane-add-note">
             <button onClick={this.addNote}>+</button>
           </div>
@@ -52,8 +61,18 @@ export default class Lane extends React.Component {
     NoteActions.update({id, task});
   }
 
-  deleteNote(id) {
+  deleteNote(laneId, noteId) {
     LaneActions.detachFromLane({laneId, noteId});
-    NoteActions.delete(id);
+    NoteActions.delete(noteId);
   }
+
+  editName(id, name) {
+    if(name) {
+      LaneActions.update({id, name});
+    }
+    else {
+      LaneActions.delete(id);
+    }
+  }
+
 }

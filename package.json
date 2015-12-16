@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "PORT=3000 HOST=192.168.0.2 webpack-dev-server"
+    "start": "PORT=3000 HOST=localhost webpack-dev-server"
   },
   "author": "",
   "license": "ISC",
@@ -15,6 +15,7 @@
     "babel-plugin-react-transform": "^1.1.1",
     "css-loader": "^0.22.0",
     "eslint": "^1.9.0",
+    "eslint-plugin-babel": "^3.0.0",
     "eslint-plugin-react": "^3.8.0",
     "html-webpack-plugin": "^1.6.2",
     "react-transform-hmr": "^1.0.1",
@@ -28,7 +29,10 @@
     "alt-container": "^1.0.0",
     "array.prototype.findindex": "^1.0.0",
     "node-uuid": "^1.4.6",
-    "react": "^0.14.2",
+    "react": "^0.14.3",
+    "react-addons-update": "^0.14.3",
+    "react-dnd": "^2.0.2",
+    "react-dnd-html5-backend": "^2.0.0",
     "react-dom": "^0.14.2"
   }
 }

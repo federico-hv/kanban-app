@@ -17,7 +17,6 @@
         "key-spacing": [2, { "align": "colon" }],
         "quotes": [2, "single", "avoid-escape"],
         "strict": 0,
-        "new-cap": 1,
         "react/display-name": 0,
         "jsx-quotes": 1,
         "react/jsx-no-undef": 1,
@@ -31,7 +30,8 @@
         "react/prop-types": 1,
         "react/react-in-jsx-scope": 1,
         "react/self-closing-comp": 1,
-        "react/wrap-multilines": 1
+        "react/wrap-multilines": 1,
+        "babel/new-cap":1
     },
     "env": {
         "browser": true,
@@ -41,6 +41,7 @@
         "mocha": true
     },
     "plugins": [
-      "react"
+      "react",
+      "babel"
     ]
 }

@@ -1,10 +1,49 @@
 import React from 'react';
+import {DragSource, DropTarget} from 'react-dnd';
+import ItemTypes from '../constants/itemTypes';
+
+const noteSource = {
+  beginDrag(props) {
+    return {
+      id: props.id
+    };
+  }
+};
+
+const noteTarget = {
+  hover(targetProps, monitor) {
+    const targetId = targetProps.id;
+    const sourceProps = monitor.getItem();
+    const sourceId = sourceProps.id;
+
+    if(sourceId !== targetId) {
+      console.log('NOTES: ', sourceId, targetId);
+      targetProps.onMove({sourceId, targetId});
+    }
+  }
+};
+
+@DragSource(ItemTypes.NOTE, noteSource, (connect, monitor) => ({
+  connectDragSource: connect.dragSource(),
+  isDragging       : monitor.isDragging() // map isDragging() state to isDragging prop
+}))
+
+@DropTarget(ItemTypes.NOTE, noteTarget, (connect) => ({
+  connectDropTarget: connect.dropTarget()
+}))
+
 
 export default class Note extends React.Component {
   static propTypes = {
-    task    : React.PropTypes.string,
-    onEdit  : React.PropTypes.func, //This is a callback
-    onDelete: React.PropTypes.func
+    task             : React.PropTypes.string,
+    onEdit           : React.PropTypes.func, //This is a callback
+    onDelete         : React.PropTypes.func,
+    children         : React.PropTypes.element, //Note has only one child which will be the Editable component, thus the element type
+    connectDragSource: React.PropTypes.func,
+    connectDropTarget: React.PropTypes.func,
+    isDragging       : React.PropTypes.func,
+    id               : React.PropTypes.string,
+    onMove           : React.PropTypes.func
   };
 
   constructor(props){
@@ -21,13 +60,14 @@ export default class Note extends React.Component {
   }
 
   render() {
-    const editing = this.state.editing;
+    const {connectDragSource, connectDropTarget, isDragging,
+    onMove, id, ...props} = this.props;
 
-    return (
-      <div>
-        {editing ? this.renderEdit() : this.renderTask()}
-      </div>
-    );
+    return connectDragSource(connectDropTarget(
+      <li style={{
+        opacity: isDragging ? 0 : 1
+      }} {...props}>{props.children}</li>
+    ));
   }
 
   renderEdit() {
@@ -39,6 +79,7 @@ export default class Note extends React.Component {
         onKeyPress={this.checkEnter} />
     );
   }
+
   renderTask() {
     const onDelete = this.props.onDelete;
 

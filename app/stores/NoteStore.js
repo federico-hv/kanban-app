@@ -18,7 +18,7 @@ class NoteStore {
   }
 
   create(note) {
-    console.log('CREATING NOTE');
+
     const notes = this.notes;
 
     note.id = uuid.v4();

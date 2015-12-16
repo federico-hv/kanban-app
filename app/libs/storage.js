@@ -1,3 +1,6 @@
+/*
+    Custom localStorage object
+ */
 export default {
   get: function(k) {
     try {
