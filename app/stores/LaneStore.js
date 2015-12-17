@@ -1,13 +1,8 @@
-/*
-    LaneStore
-
-    - LaneActions are imported to bind them to certain methods
-    - Has methods that set the state of a Lane
- */
 import uuid from 'node-uuid';
 import alt from '../libs/alt';
 import LaneActions from '../actions/LaneActions';
 import NoteStore from './NoteStore';
+import update from 'react-addons-update';
 
 class LaneStore {
   constructor() {
@@ -60,6 +55,8 @@ class LaneStore {
       noteId = NoteStore.getState().notes.slice(-1)[0].id; //slice(-1) returns the last element and [0] returns its value instead of the array
     }
 
+    this.removeNote(noteId);
+
     const lanes    = this.lanes;
     const targetId = this.findLane(laneId);
 
@@ -73,11 +70,26 @@ class LaneStore {
       lane.notes.push(noteId);
 
       this.setState({lanes});
-      console.log('LANES: ', {lanes});
     }
     else {
       console.warn('Already attached note to lane', lanes);
     }
+  }
+
+  removeNote(noteId) {
+    const lanes = this.lanes;
+    const removeLane = lanes.filter((lane) => {
+      return lane.notes.indexOf(noteId) >= 0;
+    })[0];
+
+    if(!removeLane) {
+      return;
+    }
+
+    const removeNoteIndex = removeLane.notes.indexOf(noteId);
+
+    removeLane.notes = removeLane.notes.slice(0, removeNoteIndex).
+      concat(removeLane.notes.slice(removeNoteIndex + 1));
   }
 
   detachFromLane({laneId, noteId}) {
@@ -104,7 +116,7 @@ class LaneStore {
   }
 
   findLane(id) {
-    const lanes = this.lanes;
+    const lanes     = this.lanes;
     const laneIndex = lanes.findIndex((lane) => lane.id === id);
 
     if(laneIndex < 0) {
@@ -127,12 +139,14 @@ class LaneStore {
 
     if(sourceLane === targetLane) {
       // move at once to avoid complications
+      console.log('BEFORE: ', sourceLane.notes);
       sourceLane.notes = update(sourceLane.notes, {
         $splice: [
-          [sourceNoteIndex, 1],
-          [targetNoteIndex, 0, sourceId]
+          [sourceNoteIndex, 1], //take one out
+          [targetNoteIndex, 0, sourceId] //insert that element before the other
         ]
       });
+      console.log('AFTER: ', sourceLane.notes);
     }
     else {
       // get rid of the source
@@ -143,6 +157,23 @@ class LaneStore {
     }
 
     this.setState({lanes});
+  }
+
+  moveLane({sourceId, targetId}){
+    //if declared as const a read-only error is shown
+    let lanes             = this.lanes;
+    const sourceLaneIndex = lanes.map(function(x) {return x.id; }).indexOf(sourceId);
+    const targetLaneIndex = lanes.map(function(x) {return x.id; }).indexOf(targetId);
+
+    lanes = update(lanes, {
+      $splice: [
+        [sourceLaneIndex, 1],
+        [targetLaneIndex, 0, lanes[sourceLaneIndex]]
+      ]
+    });
+
+    this.setState({lanes});
+
   }
 }
 

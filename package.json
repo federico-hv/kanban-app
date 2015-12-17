@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "PORT=3000 HOST=localhost webpack-dev-server"
+    "test" : "echo \"Error: no test specified\" && exit 1",
+    "start": "PORT=3000 HOST=localhost webpack-dev-server",
+    "build": "webpack -p"
   },
   "author": "",
   "license": "ISC",

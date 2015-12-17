@@ -2,6 +2,8 @@ var path              = require('path');
 var HtmlwebpackPlugin = require('html-webpack-plugin');
 var webpack           = require('webpack');
 var merge             = require('webpack-merge');
+// Load *package.json* so we can use `dependencies` from there
+var pkg               = require('./package.json');
 
 var TARGET            = process.env.npm_lifecycle_event; //What is this????
 var ROOT_PATH         = path.resolve(__dirname);
@@ -64,6 +66,40 @@ if(TARGET === 'start' || !TARGET) {
     },
     plugins: [
       new webpack.HotModuleReplacementPlugin()
+    ]
+  });
+}
+
+if(TARGET === 'build') {
+  module.exports = merge(common, {
+    entry: {
+      app    : APP_PATH,
+      vendors: Object.keys(pkg.dependencies).filter(function(v) {
+        // Exclude alt-utils as it won't work with this setup
+        // due to the way the package has been designed
+        // (no package.json main).
+        return v !== 'alt-utils';
+      })
+    },
+    output: {
+      path    : './build/',
+      filename: 'bundle.js'
+    },
+    devtool: 'source-map',
+    plugins: [
+      // Extract vendor and manifest files
+      new webpack.optimize.CommonsChunkPlugin({
+        names: ['vendor', 'manifest']
+      }),
+      // Setting DefinePlugin affects React library size!
+      new webpack.DefinePlugin({
+        'process.env.NODE_ENV': JSON.stringify('production')
+      }),
+      new webpack.optimize.UglifyJsPlugin({
+        compress: {
+          warnings: false
+        }
+      })
     ]
   });
 }

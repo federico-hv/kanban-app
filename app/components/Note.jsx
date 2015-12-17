@@ -7,17 +7,19 @@ const noteSource = {
     return {
       id: props.id
     };
+  },
+  isDragging(props, monitor) {
+    return props.id === monitor.getItem().id;
   }
 };
 
 const noteTarget = {
   hover(targetProps, monitor) {
-    const targetId = targetProps.id;
+    const targetId    = targetProps.id;
     const sourceProps = monitor.getItem();
-    const sourceId = sourceProps.id;
+    const sourceId    = sourceProps.id;
 
     if(sourceId !== targetId) {
-      console.log('NOTES: ', sourceId, targetId);
       targetProps.onMove({sourceId, targetId});
     }
   }
@@ -41,7 +43,7 @@ export default class Note extends React.Component {
     children         : React.PropTypes.element, //Note has only one child which will be the Editable component, thus the element type
     connectDragSource: React.PropTypes.func,
     connectDropTarget: React.PropTypes.func,
-    isDragging       : React.PropTypes.func,
+    isDragging       : React.PropTypes.bool,
     id               : React.PropTypes.string,
     onMove           : React.PropTypes.func
   };

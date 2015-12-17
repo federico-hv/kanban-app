@@ -1,5 +1,6 @@
 import React from 'react';
 import Lane from './Lane.jsx';
+import LaneActions from '../actions/LaneActions';
 
 export default class Lanes extends React.Component {
   static propTypes = {
@@ -13,6 +14,6 @@ export default class Lanes extends React.Component {
   }
 
   renderLane(lane) {
-    return <Lane className="lane" key={lane.id} lane={lane} />;
+    return <Lane onMove={LaneActions.moveLane} className="lane" key={lane.id} lane={lane} />;
   }
 }
